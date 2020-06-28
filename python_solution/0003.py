@@ -1,6 +1,7 @@
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-        if not s: return 0
+		# The first solution
+		if not s: return 0
         maxlen, fast, slow = 1, 0, 0
         slen = len(s)
         dic = {}
@@ -18,3 +19,14 @@ class Solution:
             fast += 1
         maxlen = max(maxlen, fast-slow)
         return maxlen
+
+		# The second solution
+		dic = {}
+		maxlength, leftend = 0, 0
+		for i in range(len(s)):
+			if s[i] in dic:
+				if dic[s[i]] >= leftend:
+					leftend = dic[s[i]] + 1
+			dic[s[i]] = i
+			maxlength = max(maxlength, i-leftend+1)
+		return maxlength

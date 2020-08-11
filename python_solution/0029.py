@@ -1,22 +1,17 @@
 class Solution:
     def divide(self, dividend: int, divisor: int) -> int:
-        if (dividend >= 0 and divisor > 0) or (dividend < 0 and divisor < 0):
-            neg = 1
-        else:
-            neg = -1
+        # New Solution: Binary Search (36ms: 61.20%)
+        neg = (dividend>=0) != (divisor>=0)
         dividend, divisor = abs(dividend), abs(divisor)
-        res, adv = 0, 1
-        left, right = -(1<<31), (1<<31)-1
-        
-        while dividend >= divisor + divisor:
+        res = 0
+        while dividend >= divisor:
             temp = divisor
-            while dividend >= temp + temp:
-                adv += adv
+            pos = -1
+            while dividend>=temp:
+                pos += 1
                 temp += temp
-            res += adv
-            adv = 1
-            dividend -= temp
-        
-        if dividend >= divisor:
-            res += 1
-        return neg*res if right>=neg*res>=left else right
+            res += (1<<pos)
+            dividend -= (temp>>1)
+        if neg:
+            res = -res
+        return (1<<31)-1 if res >= (1<<31) else res

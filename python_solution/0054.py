@@ -1,27 +1,20 @@
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        # New Solution: iteratively (24ms: 94.98%)
         if not matrix: return []
+        height, width = len(matrix), len(matrix[0])
+        total_num = height*width
+        directions = [[0, 1], [1, 0], [0, -1], [-1, 0]]
         res = []
-        directions = [1, 1, -1, -1]
-        s_y, s_x = -1, 0
-        choice = 0
-        while len(res) < len(matrix)*len(matrix[0]):
-            choice = choice % 4
-            if choice == 0 or choice == 2:
-                while 0 <= s_y+directions[choice] < len(matrix[0]):
-                    if matrix[s_x][s_y+directions[choice]] != 'v':
-                        s_y = s_y + directions[choice]
-                        res.append(matrix[s_x][s_y])
-                        matrix[s_x][s_y] = 'v'
-                    else:
-                        break
-            else:
-                while 0 <= s_x+directions[choice] < len(matrix):
-                    if matrix[s_x+directions[choice]][s_y] != 'v':
-                        s_x = s_x + directions[choice]
-                        res.append(matrix[s_x][s_y])
-                        matrix[s_x][s_y] = 'v'
-                    else:
-                        break
-            choice += 1
+        cur_num = i = 0
+        si, sj = 0, -1
+        while cur_num<total_num:
+            [chi, chj] = directions[i]
+            i = (i+1)%4
+            while 0<=si+chi<height and 0<=sj+chj<width and matrix[si+chi][sj+chj] != '*':
+                si += chi
+                sj += chj
+                res.append(matrix[si][sj])
+                matrix[si][sj] = '*'
+                cur_num += 1
         return res

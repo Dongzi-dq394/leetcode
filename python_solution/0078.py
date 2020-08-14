@@ -1,23 +1,34 @@
 class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
-        # Solution 1: Backtracking
-        def backtrack(target_length, index, cur):
-            if len(cur) == target_length:
-                res.append(cur)
-                return
-            else:
-                for i in range(index, length):
-                    backtrack(target_length, i+1, cur+[nums[i]])
+        # New Solution 1: Backtracking (40ms: 53.60%)
+        # Can be improved by not using length (32ms: 87.28%)
         res = []
-        length = len(nums)
-        for i in range(length+1):
-            backtrack(i, 0, [])
+        def backtracking(sub_res, index):
+            res.append(sub_res)
+            for i in range(index, len(nums)):
+                backtracking(sub_res+[nums[i]], i+1)
+        backtracking([], 0)
         return res
-    
-        # Solution 2: Recursion
-        if not nums: return [[]]
-        former = self.subsets(nums[1:])
-        length = len(former)
-        for i in range(length):
-            former.append(former[i]+[nums[0]])
-        return former
+        
+        # New Solution 2: Array Flip (28ms: 96.10%)
+        # Very smart!!
+        res = [[]]
+        for num in nums:
+            length = len(res)
+            for i in range(length):
+                res.append(res[i]+[num])
+        return res
+        
+        # New Solution 3: Bit Manupulation (36ms: 72.09%)
+        # Can be improved by using bin() to (28ms: 96.10%)
+        length = len(nums)
+        res = []
+        for i in range(1<<length):
+            temp = []
+            s = bin(i)
+            s = '0'*(length+2-len(s)) + s[2:]
+            for j in range(length):
+                if s[j]=='1':
+                    temp.append(nums[j])
+            res.append(temp)
+        return res

@@ -1,5 +1,7 @@
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:
-        for i in range(1, len(nums)):
-            nums[i] = nums[i] ^ nums[i-1]
-        return nums[-1]
+        # New Solution: Bit Manipulation (84ms: 91%)
+        res = 0
+        for i in nums:
+            res ^= i
+        return res

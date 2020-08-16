@@ -1,14 +1,17 @@
 class Solution:
     def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
-        have = [0] * len(gas)
+        if sum(gas)<sum(cost): return -1
         for i in range(len(gas)):
-            have[i] = gas[i] - cost[i]
-        if sum(have) < 0: return -1
-        tank = res = 0
+            gas[i] -= cost[i]
+        pre = 0 # The remaining gas, initialized to 0
+        res = 0 # The result
+        # Greedy, there must be one starting point.
+        # If starting from one point, the remaining gas is always positive
+        # then this point is where we should start.
         for i in range(len(gas)):
-            if tank + have[i] < 0:
+            if pre+gas[i]<0:
                 res = i+1
-                tank = 0
+                pre = 0
             else:
-                tank += have[i]
+                pre += gas[i]
         return res

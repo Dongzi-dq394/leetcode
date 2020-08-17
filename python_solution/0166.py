@@ -1,25 +1,23 @@
 class Solution:
     def fractionToDecimal(self, numerator: int, denominator: int) -> str:
-        if numerator == 0: return '0'
-        if numerator % denominator == 0: return str(numerator//denominator)
-        res = ''
-        if (numerator>=0) != (denominator>=0):
-            res += '-'
+        # New Solution: Hash Table for the numerator (24ms: 95.85%)
+        if numerator%denominator==0:
+            return str(numerator//denominator)
+        neg = (numerator>=0) != (denominator>=0)
         numerator, denominator = abs(numerator), abs(denominator)
-        res += str(numerator//denominator)
-        res += '.'
-        length = len(res)
-        dic = {}
-        
+        res = str(numerator//denominator)+'.'
+        remain = ''
         numerator %= denominator
-        while numerator > 0:
-            if numerator in dic:
-                res = res[:dic[numerator]] + '(' + res[dic[numerator]:length] + ')'
-                return res
-            else:
-                dic[numerator] = length
-                length += 1
+        dic = {}
+        start = 0
+        while numerator:
+            if numerator not in dic:
+                dic[numerator] = start
+                start += 1
                 numerator *= 10
-                res += str(numerator//denominator)
+                remain += str(numerator//denominator)
                 numerator %= denominator
-        return res
+            else:
+                remain = remain[:dic[numerator]] + '(' + remain[dic[numerator]:] + ')'
+                break
+        return res + remain if not neg else '-' + res + remain

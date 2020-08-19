@@ -3,23 +3,27 @@ class Solution:
         """
         Do not return anything, modify nums in-place instead.
         """
-        # Something to learn from this problem:
-        # 1. nums = nums[::-1] should be nums[:] = nums[::-1]
-        # 2. The assignment should be nums[:]...
-        
-        # Solution 1: Exchange (112ms)
+        # Solution 1: 84ms
         k %= len(nums)
-        if k!=0:
-            nums[:k], nums[k:] = nums[-k:], nums[:-k]
+        nums[:] = nums[-k:] + nums[:-k]
         
-        # Solution 2: Stack Operation (100ms)
-        k = len(nums) - (k%len(nums))
-        while k:
-            nums.append(nums.pop(0))
-            k -= 1
-        
-        # Solution 3: Reverse (128ms)
+        # Solution 2: Reverse (64ms: 77.43%)
         k %= len(nums)
-        nums[:-k] = nums[:-k][::-1]
-        nums[-k:] = nums[-k:][::-1]
         nums[:] = nums[::-1]
+        nums[:k] = nums[:k][::-1]
+        nums[k:] = nums[k:][::-1]
+        
+        # New Solution 3: Cyclic Replacements from Solution (84ms: 46.21%)
+        start = 0
+        count = 0
+        length = len(nums)
+        while count<length:
+            cur_ind, pre_val = start, nums[start]
+            while True:
+                new_ind = (cur_ind+k)%length
+                nums[new_ind], pre_val = pre_val, nums[new_ind]
+                cur_ind = new_ind
+                count += 1
+                if new_ind == start:
+                    break
+            start += 1

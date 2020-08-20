@@ -32,3 +32,13 @@ class Solution:
         head.next.next = head
         head.next = None
         return res
+        
+        # New Solution 4: from LC 143 (36ms: 77.51%)
+        # Save space (15.5MB: 31.63%)
+        res = ListNode()
+        while head:
+            res.next, head.next, head = head, res.next, head.next
+            # This one is wrong!!!
+            # The order if important!!!
+            #head, head.next, res.next = head.next, res.next, head
+        return res.next

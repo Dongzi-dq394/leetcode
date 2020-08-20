@@ -1,19 +1,31 @@
 class Solution:
     def findKthLargest(self, nums: List[int], k: int) -> int:
+        # Old Solution: Use quick sort (3636ms: 5.03%)
         pivot = nums[0]
-        s_start, l_start = 1, len(nums)-1
+        l, r = 1, len(nums)-1
         while True:
-            while s_start <= l_start and nums[l_start] >= pivot:
-                l_start -= 1
-            while s_start <= l_start and nums[s_start] <= pivot:
-                s_start += 1
-            if s_start <= l_start:
-                nums[s_start], nums[l_start] = nums[l_start], nums[s_start]
-            else:
+            while l<=r and nums[l]<pivot:
+                l += 1
+            while l<=r and nums[r]>=pivot:
+                r -= 1
+            if l>r:
                 break
-        if len(nums)-1-l_start == k-1:
+            else:
+                nums[l], nums[r] = nums[r], nums[l]
+                l += 1
+                r -= 1
+        if len(nums)-r==k:
             return pivot
-        elif len(nums)-1-l_start > k-1:
-            return self.findKthLargest(nums[l_start+1:], k)
+        elif len(nums)-r>k:
+            return self.findKthLargest(nums[r+1:], k)
         else:
-            return self.findKthLargest(nums[1:s_start], k-len(nums)+l_start)
+            return self.findKthLargest(nums[1:l], k-len(nums)+r)
+        
+        # New Solution 1: Sort (92ms: 43.55%)
+        return sorted(nums, reverse=True)[k-1]
+        
+        # New Solution 2: min-Heap from Python (68ms: 78.38%)
+        heapify(nums)
+        for i in range(len(nums)-k):
+            heappop(nums)
+        return heappop(nums)

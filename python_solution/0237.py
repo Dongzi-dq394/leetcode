@@ -10,5 +10,8 @@ class Solution:
         :type node: ListNode
         :rtype: void Do not return anything, modify node in-place instead.
         """
-        if node:
-            node.val, node.next = node.next.val, node.next.next
+        # node = node.next
+        # This line is wrong because node is like a pointer, if we want to
+        # modify the value, we need to modify the value which pointer pointing
+        # at. Or, we only move the pointer to the next node.
+        node.val, node.next = node.next.val, node.next.next
